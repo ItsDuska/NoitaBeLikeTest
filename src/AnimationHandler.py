@@ -3,7 +3,7 @@ import os
 
 
 class Sprites(pygame.sprite.Sprite):
-    def __init__(self, path: list[str], animations: list[int], position: pygame.math.Vector2, height: int, width: int, scale: int, cooldown: int) -> None:
+    def __init__(self, path: list[str], animations: list[int], position: pygame.math.Vector2, height: int, width: int, scale: int, cooldown: int, isAnimating: bool) -> None:
         super().__init__()
         self.position: pygame.math.Vector2 = position
         self.animationList: list[list[pygame.Surface]] = []
@@ -14,13 +14,14 @@ class Sprites(pygame.sprite.Sprite):
         self.scale: int = scale
         self.coolDown: int = cooldown
         self.näyttö = pygame.display.get_surface()
-        self.isAnimating: bool = True
+        self.isAnimating: bool = isAnimating
         self.lastUpdate: int = 0
         # Kaikki objektin animaatiot esim idel, walking, attack ja muut
         self.animations: list[int] = animations
         self.sheet: pygame.Surface = pygame.image.load(
             os.path.join(*path))
-        self.makeAnimationList()
+        if self.isAnimating:
+            self.makeAnimationList()
 
     def get_image(self, frame: int):
         image = pygame.Surface((self.width, self.height)).convert_alpha()
@@ -28,10 +29,10 @@ class Sprites(pygame.sprite.Sprite):
                    ((frame*self.width), 0, self.width, self.height))
         image = pygame.transform.scale(
             image, (self.width*self.scale, self.height*self.scale))
+        image.set_colorkey((0, 0, 0))
         return image
 
     def makeAnimationList(self):
-        print(self.animations)
         for animation in self.animations:
             temp = []
             for _ in range(animation):
@@ -40,11 +41,9 @@ class Sprites(pygame.sprite.Sprite):
             self.animationList.append(temp)
 
     def update(self, position: pygame.math.Vector2, action: int, isAnimating: bool):
-        if not isAnimating:
-            return
         self.position = position
         currentTime: int = pygame.time.get_ticks()
-        if currentTime - self.lastUpdate >= self.coolDown:
+        if currentTime - self.lastUpdate >= self.coolDown and isAnimating:
             self.frame += 1
             self.lastUpdate = currentTime
             if self.frame >= len(self.animationList):

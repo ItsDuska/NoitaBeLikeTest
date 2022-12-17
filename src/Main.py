@@ -1,23 +1,21 @@
 import pygame
-import noise
 from Player import Player
-
 from Cave import Cave
-# loladfadwad
-# daffefaF
 
 
 class Game:
     def __init__(self) -> None:
         pygame.init()
         self.winSize = (800, 800)
-        self.chunkSize = (100, 300)
+        self.chunkSize = (100, 100)  # y x
+        self.blockSize = self.winSize[0] // self.chunkSize[0]
         self.clock = pygame.time.Clock()
         # pygame.FULLSCREEN | pygame.DOUBLEBUF | pygame.HWSURFACE
         self.näyttö = pygame.display.set_mode(self.winSize, 0, 16)
         pygame.event.set_allowed(
             pygame.QUIT | pygame.KEYDOWN | pygame.KEYUP | pygame.MOUSEBUTTONDOWN)
         self.player = Player()
+        self.cave = Cave(self.chunkSize, self.blockSize)
         self.run()
 
     def run(self):
@@ -27,9 +25,12 @@ class Game:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     röpöttää = False
-            self.näyttö.fill((0, 60, 0))
-            self.player.update()
+            self.näyttö.fill((0, 0, 0))
 
+            # self.cave.caveTiles.draw(self.näyttö)
+            self.player.update()
+            # print(len(self.cave.caveTiles))
+            self.cave.update()
             self.clock.tick(60)
             pygame.display.update()
 
