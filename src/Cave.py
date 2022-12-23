@@ -9,8 +9,7 @@ class Cave:
     def __init__(self, chunkSize, blockSize) -> None:
         self.caveTiles = pg.sprite.Group()
         self.chunkSize = chunkSize
-        self.noise = PerlinNoise(7, randint(1, 100_000))
-        # f loat sus = (noise([x/chunkSize[0], y/self.chunkSize[1]]))
+        self.noise = PerlinNoise(9, randint(1, 100_000))
         self.luoCave(blockSize)
 
     def luoCave(self, blockSize):
@@ -20,13 +19,8 @@ class Cave:
             for x in range(self.chunkSize[1]):
                 value = self.noise([x/self.chunkSize[0], y/self.chunkSize[1]])
                 isPassable, blockType = self.checkValue(value)
-                block = Block(
-                    isPassable, pg.math.Vector2(x*blockSize*10, y*blockSize*10), blockType, 16, 16,)
-                self.caveTiles.add(block)
-                self.cave[y][x] = block
-
-    def update(self):
-        self.caveTiles.update()
+                self.cave[y][x] = Block(
+                    isPassable, pg.math.Vector2(x*blockSize, y*blockSize), blockType, 16, 16, self.caveTiles, blockSize)
 
     def checkValue(self, value):
         if value < 0:

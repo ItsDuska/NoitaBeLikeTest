@@ -1,5 +1,5 @@
 import pygame
-import os
+from os import path
 
 
 class Sprites(pygame.sprite.Sprite):
@@ -19,7 +19,7 @@ class Sprites(pygame.sprite.Sprite):
         # Kaikki objektin animaatiot esim idel, walking, attack ja muut
         self.animations: list[int] = animations
         self.sheet: pygame.Surface = pygame.image.load(
-            os.path.join(*path))
+            path.join(*path))
         if self.isAnimating:
             self.makeAnimationList()
 

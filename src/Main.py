@@ -22,15 +22,16 @@ class Game:
         #cave = Cave(80, 50, 0.5, 2)
         röpöttää = True
         while röpöttää:
+            pygame.display.set_caption(str(int(self.clock.get_fps()))+" fps")
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     röpöttää = False
-            self.näyttö.fill((0, 0, 0))
+            self.näyttö.fill((30, 60, 45))
 
-            # self.cave.caveTiles.draw(self.näyttö)
+            self.cave.caveTiles.draw(self.näyttö)
             self.player.update()
             # print(len(self.cave.caveTiles))
-            self.cave.update()
+            # self.cave.update()
             self.clock.tick(60)
             pygame.display.update()
 
